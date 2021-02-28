@@ -1,0 +1,30 @@
+service: telegramtestproject
+
+provider:
+    name: aws
+    runtime: nodejs12.x
+    profile: telegrambot
+    region: us-east-1
+    stage: dev
+    iamRoleStatements:
+        - Effect: Allow
+          Action:
+              - lex:*
+              - s3:*
+              - dynamodb:*
+          Resource: '*'
+
+plugins:
+    - serverless-webpack
+
+package:
+    individually: true
+
+functions:
+    telegramToLex:
+        handler: telegramToLex.handler
+        events:
+            - http:
+                  path: telegram-webhook
+                  method: POST
+                  cors: true
